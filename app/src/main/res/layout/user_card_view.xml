@@ -20,6 +20,11 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:orientation="vertical">
+            <TextView
+                android:id="@+id/user_id"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/user_name"

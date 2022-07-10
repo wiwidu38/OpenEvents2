@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 public class Event {
 
     private int id;
-
     private String name;
     @SerializedName("location")
     private String location;

@@ -7,11 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.williambastos.openevents.EventActivity;
 import com.williambastos.openevents.R;
+import com.williambastos.openevents.UserActivity;
 import com.williambastos.openevents.model.User;
 import java.util.ArrayList;
 
@@ -42,13 +47,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersAdapter
         return this.users.size();
     }
 
-    public static class UsersAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class UsersAdapterViewHolder extends RecyclerView.ViewHolder{
 
         private User user;
         private Context context;
         private ImageView user_image;
         private TextView user_name;
         private TextView user_lastName;
+        private TextView user_id;
         private CardView userCard;
 
         public UsersAdapterViewHolder(@NonNull View itemView) {
@@ -56,7 +62,17 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersAdapter
             this.user_image = (ImageView) itemView.findViewById(R.id.user_picture);
             this.user_name = (TextView) itemView.findViewById(R.id.user_name);
             this.user_lastName = (TextView) itemView.findViewById(R.id.user_last_name);
+            this.user_id = (TextView) itemView.findViewById(R.id.user_id);
             this.userCard = (CardView) itemView.findViewById(R.id.user_card_view);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TextView userIdView = view.findViewById(R.id.user_id);
+                    Intent intent = new Intent(view.getContext(), UserActivity.class);
+                    intent.putExtra("id", Integer.parseInt(userIdView.getText().toString()));
+                    itemView.getContext().startActivity(intent);
+                }
+            });
 
         }
 
@@ -68,25 +84,18 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersAdapter
             if (this.user.getImage() != null) {
                 if (this.user.getImage().startsWith("http")) {
                     url = this.user.getImage();
-                } else {
-                    url = "http://172.16.205.68/img/" + this.user.getImage();
                 }
             }
 
-            Glide.with(context)
+            Glide.with(userCard.getContext())
+                    .applyDefaultRequestOptions(new RequestOptions()
+                    .error(R.drawable.test))
                     .load(url)
                     .into(user_image);
 
-            this.userCard.setOnClickListener(this);
             this.user_name.setText(this.user.getName());
             this.user_lastName.setText(this.user.getLast_name());
-        }
-
-        @Override
-        public void onClick(View view) {
-            // Intent intent = new Intent(context, InfoUserActivity.class);
-            // intent.putExtra("id", this.user.getId());
-            // this.context.startActivity(intent);
+            this.user_id.setText(String.valueOf(this.user.getId()));
         }
     }
 }

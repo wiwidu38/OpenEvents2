@@ -94,6 +94,37 @@ private String token;
         }
     }
 
+    private void eventByCategories() {
+        Retrofit retrofit = APIConnect.getRetrofitInstance();
+        OpenEventsAPI service = retrofit.create(OpenEventsAPI.class);
+
+        Call<ArrayList<Event>> call = service.getEvents("Bearer " + token);
+        call.enqueue(new Callback<ArrayList<Event>>() {
+
+            @Override
+            public void onResponse(Call<ArrayList<Event>> call, Response<ArrayList<Event>> response) {
+                if (response.isSuccessful()) {
+                    if (response.code() == 200) {
+                        ArrayList<Event> events = response.body();
+                        RecyclerView recyclerViewCards = binding.listCards;
+                        recyclerViewCards.setHasFixedSize(true);
+                        LinearLayoutManager llm = new LinearLayoutManager(getActivity().getApplicationContext());
+                        recyclerViewCards.setLayoutManager(llm);
+                        displayCards(recyclerViewCards, events);
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Incorrect data. Please try again!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Event>> call, Throwable t) {
+                Toast.makeText(getContext(),"Connection error",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
     public void getIdUser() {
         Retrofit retrofit = APIConnect.getRetrofitInstance();
         OpenEventsAPI service = retrofit.create(OpenEventsAPI.class);

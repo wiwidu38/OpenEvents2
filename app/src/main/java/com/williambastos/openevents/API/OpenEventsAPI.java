@@ -40,8 +40,8 @@ public interface OpenEventsAPI {
                             @Field("image") String image,
                             @Field("location") String location,
                             @Field("description") String description,
-                            @Field("eventStart_date") Date eventStart_date,
-                            @Field("eventEnd_date") Date eventEnd_date,
+                            @Field("eventStart_date") String eventStart_date,
+                            @Field("eventEnd_date") String eventEnd_date,
                             @Field("n_participators") int n_participators,
                             @Field("type") String type);
     @GET("events/{id}")

@@ -32,6 +32,11 @@
             android:label="@string/title_activity_event"
             android:theme="@style/Theme.OpenEvents.NoActionBar"/>
         <activity
+            android:name=".UserActivity"
+            android:exported="false"
+            android:label="@string/title_activity_user"
+            android:theme="@style/Theme.OpenEvents.NoActionBar" />
+        <activity
             android:name=".SignUpActivity"
             android:exported="false"
             android:label="@string/title_activity_signup"

@@ -1,13 +1,18 @@
 package com.williambastos.openevents;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -18,47 +23,45 @@ import com.bumptech.glide.request.RequestOptions;
 import com.williambastos.openevents.API.APIConnect;
 import com.williambastos.openevents.API.OpenEventsAPI;
 import com.williambastos.openevents.model.Event;
+import com.williambastos.openevents.model.User;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class EventActivity extends AppCompatActivity {
+public class UserActivity extends AppCompatActivity {
 
-    private TextView eventName;
-    private TextView startDateEvent;
-    private TextView endDateEvent;
-    private TextView geoEvent;
-    private TextView descriptionEvent;
-    private ImageView imageEvent;
+    private TextView name;
+    private TextView email;
+    private ImageView imageUser;
+    private TextView id_user;
     private String token;
-    private Event event;
-    private int idEvent;
+    private int idUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event);
+        setContentView(R.layout.activity_user);
 
         SharedPreferences sh = getSharedPreferences("sh", Context.MODE_PRIVATE);
         token = sh.getString("token","123456");
-        idEvent = getIntent().getExtras().getInt("id");
+        idUser = getIntent().getExtras().getInt("id");
 
-        eventName = findViewById(R.id.title_event);
-        imageEvent = findViewById(R.id.image_event);
-        startDateEvent = findViewById(R.id.dateStart_event);
-        endDateEvent = findViewById(R.id.dateEnd_event);
-        geoEvent = findViewById(R.id.geo_event);
-        descriptionEvent = findViewById(R.id.description_event);
-        LinearLayout attendButton = findViewById(R.id.attend_event);
-        findEventById(idEvent);
+        name = findViewById(R.id.fullName_user);
+        email = findViewById(R.id.email_user);
+        imageUser = findViewById(R.id.image_user);
+        id_user = findViewById(R.id.id_user);
+
+        LinearLayout attendButton = findViewById(R.id.add_user);
+        findUserById(idUser);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("You are attending this event");
-        builder.setMessage("Do you want to add this event to your calendar ?");
+        builder.setTitle("You are adding new friend");
+        builder.setMessage("Do you want to add this person to your friendlist ?");
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -83,20 +86,20 @@ public class EventActivity extends AppCompatActivity {
         this.finish();
     }
 
-    private void findEventById(int id) {
+    private void findUserById(int id) {
         Retrofit retrofit = APIConnect.getRetrofitInstance();
         OpenEventsAPI service = retrofit.create(OpenEventsAPI.class);
-        Call<ArrayList<Event>> call = service.getEvent("Bearer " + token, id);
-        call.enqueue(new Callback<ArrayList<Event>>() {
+        Call<ArrayList<User>> call = service.getUser("Bearer " + token, id);
+        call.enqueue(new Callback<ArrayList<User>>() {
             @Override
-            public void onResponse(Call<ArrayList<Event>> call, Response<ArrayList<Event>> response) {
+            public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
                 if (response.isSuccessful()){
                     if (response.code() == 200) {
-                        ArrayList<Event> events = response.body();
-                        if (events.get(0) != null) {
-                            event = events.get(0);
+                        ArrayList<User> users = response.body();
+                        if (users.get(0) != null) {
+                            User user = users.get(0);
                             try {
-                                displayEvent(events.get(0));
+                                displayEvent(user);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -107,30 +110,26 @@ public class EventActivity extends AppCompatActivity {
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList<Event>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<User>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-    private void displayEvent(Event event) throws ParseException {
-        eventName.setText(event.getName());
-        startDateEvent.setText(event.getStartDate());
-        endDateEvent.setText(event.getEndDate());
-        geoEvent.setText(event.getLocation());
-        descriptionEvent.setText(event.getDescription());
+    private void displayEvent(User user) throws ParseException {
+        name.setText(user.getName() + " " + user.getLast_name());
+        email.setText(user.getEmail());
+        id_user.setText(String.valueOf(user.getId()));
 
         String url = "";
 
-        if (this.event.getImage() != null) {
-            if (this.event.getImage().startsWith("http")) {
-                url = this.event.getImage();
-            } else {
-                url = "https://172.16.205.68/img/" + this.event.getImage();
+        if (user.getImage() != null) {
+            if (user.getImage().startsWith("http")) {
+                url = user.getImage();
             }
         }
         Glide.with(getApplicationContext()).applyDefaultRequestOptions(new RequestOptions()
                 .error(R.drawable.test))
                 .load(url)
-                .into(imageEvent);
+                .into(imageUser);
     }
 }

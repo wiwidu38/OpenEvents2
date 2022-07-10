@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.williambastos.openevents.EventActivity;
@@ -48,11 +49,13 @@ public class RecyclerViewCards extends RecyclerView.Adapter<RecyclerViewCards.Ca
             eventDate = (TextView)itemView.findViewById(R.id.date_event);
             eventGeo = (TextView)itemView.findViewById(R.id.geo_event);
             eventId = (TextView) itemView.findViewById(R.id.idEvent);
+            eventPhoto = (ImageView) itemView.findViewById(R.id.image_event);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(itemView.getContext(), EventActivity.class);
-                    intent.putExtra("id", Integer.parseInt(eventId.getText().toString()));
+                    TextView eventIdView = view.findViewById(R.id.idEvent);
+                    Intent intent = new Intent(view.getContext(), EventActivity.class);
+                    intent.putExtra("id", Integer.parseInt(eventIdView.getText().toString()));
                     itemView.getContext().startActivity(intent);
                 }
             });
@@ -79,7 +82,7 @@ public class RecyclerViewCards extends RecyclerView.Adapter<RecyclerViewCards.Ca
         CardViewHolder.eventDate.setText(cards.get(i).date);
         CardViewHolder.eventGeo.setText(cards.get(i).geo);
         CardViewHolder.eventPhoto.setImageResource(R.drawable.test);
-        //CardViewHolder.eventId.setText(cards.get(i).id);
+        CardViewHolder.eventId.setText(String.valueOf(cards.get(i).id));
     }
 
     @Override

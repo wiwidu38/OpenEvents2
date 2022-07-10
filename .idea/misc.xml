@@ -12,8 +12,9 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1816123188405797" />
         <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.18177083333333333" />
-        <entry key="app/src/main/res/layout/activity_new_event.xml" value="0.35625" />
+        <entry key="app/src/main/res/layout/activity_new_event.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.32864583333333336" />
+        <entry key="app/src/main/res/layout/activity_user.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/app_bar_navigation.xml" value="0.25" />
         <entry key="app/src/main/res/layout/content_navigation.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/event_card_view.xml" value="0.1" />
